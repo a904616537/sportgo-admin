@@ -228,6 +228,7 @@
 					desc  : '',
 					img   : '',
 					video : '',
+					item  : [],
 					type  : 0,
 					order : 20
 				})
@@ -388,7 +389,8 @@
 					title : '',
 					desc  : '',
 					img   : '',
-					level  : 0,
+					level : 0,
+					item  : [],
 					order : 10,
 				};
 			}
