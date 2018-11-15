@@ -95,7 +95,7 @@
 			}
 		},
 		computed : mapState({
-			user : state => JSON.parse(state.User.user)
+			user : state => typeof state.User.user == 'string'?JSON.parse(state.User.user):state.User.user
 		}),
 		methods: {
 			onSubmit() {
