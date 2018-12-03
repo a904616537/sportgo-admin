@@ -25,16 +25,24 @@
 						<el-table :data="props.row.item" highlight-current-row style="width: 100%;">
 							<el-table-column type="index" width="60">
 							</el-table-column>
-							<el-table-column prop="title" label="Video Title" width="150"/>
+							<el-table-column label="Video Title" width="150">
+								<template scope="scope">
+									<p v-if="scope.row" v-text="scope.row.title"></p>
+								</template>
+							</el-table-column>
 							<el-table-column label="Video Cover" width="300" >
 								<template scope="scope">
 									<div class="imgdiv">
-										<img :src="scope.row.img" style="height: 80px;margin: 5px;" />
+										<img v-if="scope.row" :src="scope.row.img" style="height: 80px;margin: 5px;" />
 									</div>
 								</template>
 							</el-table-column>
 
-							<el-table-column prop="video" label="Video URL"/>
+							<el-table-column label="Video URL">
+								<template scope="scope">
+									<p v-if="scope.row" v-text="scope.row.video"></p>
+								</template>
+							</el-table-column>
 						</el-table>
 
 					</template>
