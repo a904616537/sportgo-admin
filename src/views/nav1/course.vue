@@ -349,6 +349,7 @@
 			},
 			onEditor(index, row) {
 				this._id = row._id;
+				console.log('onEditor', row)
 				this.form = row;
 				this.addFormVisible = true;
 			},

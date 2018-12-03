@@ -65,13 +65,13 @@
 			<el-col :span="8" class="col">
 				<el-upload
 				class     = "upload-demo"
-				list-type = "picture"
 				:limit     = "1"
 				:action    = "uploadUrl"
 				:multiple  = "false"
-				:show-file-list="false"
+				:show-file-list="true"
+				:on-remove="onRemove"
 				:on-success= "onSuccess">
-					<img v-if="data.video" :src="data.video" class="avatar">
+					<p v-if="data.video" class="success">{{data.video}}</p>
 					<i v-else class="el-icon-plus add_icon"></i>
 				</el-upload>
 			</el-col>
@@ -137,6 +137,9 @@
 				this.show = true;
 				this.data.video = data.msg
 			},
+			onRemove() {
+				this.data.video = '';
+			},
 			onUploadImg(data, file) {
 				this.show = true;
 				this.data.img = data.msg
@@ -166,6 +169,14 @@
     height: 150px;
     line-height: 150px;
     text-align: center;
+}
+.success {
+	font-size   : 16px;
+	color       : #8c939d;
+	width       : 150px;
+	height      : 150px;
+	line-height : 25px;
+	word-wrap   : break-word;
 }
 .avatar {
 	width: 150px;

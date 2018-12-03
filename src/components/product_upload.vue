@@ -42,6 +42,12 @@
 				default : () => {console.log('on submit')}
 			}
 		},
+		watch: {
+		    src: function (val, oldVal) {
+		    	console.log('属性变更')
+		    	this.img = val;
+		    },
+		},
 		methods: {
 			onSuccess(data, file) {
 				this.img = data.msg
