@@ -28,6 +28,7 @@ if(process.env.NODE_ENV === 'production') {
     Vue.config.apiUrl = 'http://testserver.eatisco.com';
     Vue.config.uploadUrl = "http://106.14.94.210:8082/upload";
 } else {
+  // Vue.config.apiUrl = 'http://testserver.eatisco.com';
     Vue.config.apiUrl = 'http://localhost:8081';
     Vue.config.uploadUrl = "http://106.14.94.210:8082/upload";
 }

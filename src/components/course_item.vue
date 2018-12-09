@@ -77,7 +77,7 @@
 			</el-col>
 		</el-row>
 		<el-row>
-			<el-col :span="4"><el-button @click.native="onCancel(index)">Remove</el-button></el-col>
+			<el-col :span="4"><el-button @click.native="onCancel(index)">Cancel</el-button></el-col>
 			<el-col :span="4"><el-button v-if="show" type="primary" @click.native="submit" :loading="addLoading">Confirm</el-button></el-col>
 		</el-row>
 	</el-col>
@@ -111,7 +111,9 @@
 			},
 			item : {
 				type    : Object,
-				default : () => {return {
+				default : () => {
+					return {
+					pid : '',
 					title : '',
 					desc  : '',
 					img   : '',
@@ -128,6 +130,12 @@
 				type    : Function,
 				default : () => {console.log('on submit')}
 			}
+		},
+		watch: {
+		    item: function (val, oldVal) {
+		    	console.log('属性变化了', val)
+		    	this.data = val;
+		    },
 		},
 		methods: {
 			onShowConfirm() {
@@ -146,7 +154,7 @@
 			},
 			submit() {
 				this.show = false;
-				this.onSubmit(this.index, this.data);
+				this.onSubmit(this.data);
 			}
 		}
 	};

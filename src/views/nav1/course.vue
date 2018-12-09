@@ -43,6 +43,12 @@
 									<p v-if="scope.row" v-text="scope.row.video"></p>
 								</template>
 							</el-table-column>
+							<el-table-column label="Action" width="150">
+								<template scope="scope">
+									<el-button type="info" style="margin: 3px auto;" size="small" @click="onEditorVideo(props.row._id, scope.row)">Editor</el-button>
+									<el-button type="danger" style="margin: 3px auto;" size="small" :disabled="scope.row.audit" @click="removeVideo(props.row._id, scope.row)">Delete</el-button>
+								</template>
+							</el-table-column>
 						</el-table>
 
 					</template>
@@ -82,6 +88,7 @@
 				</el-table-column>
 				<el-table-column label="Action" width="150">
 					<template scope="scope">
+						<el-button type="info" style="margin: 3px auto;" size="small" @click="onAddVideo(scope.$index, scope.row)">Add Video</el-button>
 						<el-button type="info" style="margin: 3px auto;" size="small" @click="onEditor(scope.$index, scope.row)">Editor</el-button>
 						<el-button type="danger" style="margin: 3px auto;" size="small" :disabled="scope.row.audit" @click="handleDel(scope.$index, scope.row)">Delete</el-button>
 					</template>
@@ -151,28 +158,17 @@
 					</el-row>					
 				</el-card>
 
-				<el-row>
-					<el-col :span="24"><div class="grid-content bg-purple"><h1>Course Video</h1></div></el-col>
-				</el-row>
-				
-				
-				<v-course-item v-for="(item, index) in form.item" :key="index" :index="index" :item="item" :onSubmit="onSubmitItem" :onCancel="onCancel"/>
-
-				<el-card>
-					<el-row>
-						<el-col :span="24">
-							<div @click="addItem" class="grid-content bg-purple-dark">
-								<i class="el-icon-plus">Add Video</i>
-							</div>
-						</el-col>
-					</el-row>
-				</el-card>
-
 				<div slot="footer" class="dialog-footer">
 					<el-button @click.native="addFormVisible = false">Cancel</el-button>
 					<el-button type="primary" @click.native="addSubmit" :loading="addLoading">Submit</el-button>
 				</div>
 			</el-dialog>
+
+
+			<el-dialog title="Course Video" v-model="courseVideo" :close-on-click-modal="false">
+				<v-course-item :item="item" :onSubmit="onSubmitItem" :onCancel="onCancel"/>
+			</el-dialog>
+
 
 		</template>
 
@@ -189,6 +185,8 @@
 		data() {
 			return {
 				_id : null,
+				courseVideo : false,
+				item : {},
 				form : {
 					title : '',
 					desc  : '',
@@ -229,25 +227,17 @@
 			onSubmit(index, data) {
 				this.form.img = data
 			},
-			addItem() {
-				console.log('item', this.form);
-				this.form.item.push({
-					title : '',
-					desc  : '',
-					img   : '',
-					video : '',
-					item  : [],
-					type  : 0,
-					order : 20
-				})
-			},
-			onSubmitItem(index, data) {
-				console.log('onSubmitItem', index, data)
-				this.form.item.splice(index, 1, data);
+			onSubmitItem(data) {
+				this.courseVideo = false;
+				let method = 'post';
+				if(data._id) {
+					method = 'put';
+				};
+				this.editVideo(data, method)
 			},
 			onCancel(index) {
-				console.log('取消', index)
-				this.form.item.splice(index, 1);
+				this.item = {};
+				this.courseVideo = false;
 			},
 			onSeletct(item, order) {
 				if(this.loading) return;
@@ -326,25 +316,35 @@
 						message : 'Failure'
 					});
 				});
+			},
+			editVideo(obj, method) {
+				console.log('obj', obj)
+				this.addLoading = true;
+				// const body = querystring.stringify(obj);
 
-				// fetch(Vue.config.apiUrl + '/course',{
-			 //        method : method,
-			 //        headers : {
-			 //          'Content-Type' : 'application/x-www-form-urlencoded'
-			 //        },
-			 //        body : body
-				// })
-				// .then(response => response.json())
-				// .then(result => {
+				axios({
+					method : method,
+					url    : Vue.config.apiUrl + '/course/video',
+					data   : obj
+				})
+				.then((response) => {
+					this.addLoading = false;
+					this.$message({
+						type    : 'success',
+						message : 'Success'
+					});
+					this.item = {};
+					this.addFormVisible = false;
+					this.getCourse();
 					
-				// })
-				// .catch(err => {
-				// 	this.loading  = false;
-				// 	this.$message({
-				// 		type    : 'error',
-				// 		message : 'Failure'
-				// 	});
-				// })
+				})
+				.catch(err => {
+					this.loading  = false;
+					this.$message({
+						type    : 'error',
+						message : 'Failure'
+					});
+				});
 			},
 			addSubmit() {
 				let method = 'post';
@@ -355,11 +355,32 @@
 				};
 				this.editCourse(data, method)
 			},
+			onAddVideo(index, row) {
+				console.log('row.pid',row);
+				this.item = {
+					pid   : row._id,
+					title : '',
+					desc  : '',
+					img   : '',
+					video : '',
+					type  : 0,
+					order : 20
+				};
+				this.courseVideo = true;
+			},
 			onEditor(index, row) {
 				this._id = row._id;
-				console.log('onEditor', row)
 				this.form = row;
 				this.addFormVisible = true;
+			},
+			onEditorVideo(pid, row) {
+				console.log('row.pid', pid,row);
+
+				this.item = {
+					pid,
+					...row
+				};
+				this.courseVideo = true;
 			},
 			handleDel(index, row) {
 				this.loading = true;
@@ -390,6 +411,32 @@
 			},
 			handleRemove(file, fileList) {
 				this.fileList = fileList;
+			},
+			removeVideo(pid, row) {
+				this.addLoading = true;
+				const data = {pid, _id : row._id};
+				axios({
+					method : 'delete',
+					url    : Vue.config.apiUrl + '/course/video',
+					data   : data
+				})
+				.then((response) => {
+					this.addLoading = false;
+					this.$message({
+						type    : 'success',
+						message : 'Success'
+					});
+					this.addFormVisible = false;
+					this.getCourse();
+					
+				})
+				.catch(err => {
+					this.loading  = false;
+					this.$message({
+						type    : 'error',
+						message : 'Failure'
+					});
+				});
 			},
 			create() {
 				this.addFormVisible = true;
