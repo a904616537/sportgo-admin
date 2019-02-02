@@ -25,12 +25,11 @@ Vue.use(Vuex)
 //NProgress.configure({ showSpinner: false });
 console.log('__ENV__', process.env.NODE_ENV)
 if(process.env.NODE_ENV === 'production') {
-    Vue.config.apiUrl = 'http://server.sportgochina.com';
-    Vue.config.uploadUrl = "http://106.14.94.210:8082/upload";
+    Vue.config.apiUrl    = 'http://server.sportgochina.com';
+    Vue.config.uploadUrl = "http://img.sportgochina.com/upload";
 } else {
-    Vue.config.apiUrl = 'http://server.sportgochina.com';
-    // Vue.config.apiUrl = 'http://localhost:8081';
-    Vue.config.uploadUrl = "http://106.14.94.210:8082/upload";
+    Vue.config.apiUrl    = 'http://server.sportgochina.com';
+    Vue.config.uploadUrl = "http://img.sportgochina.com/upload";
 }
 
 const router = new VueRouter({
