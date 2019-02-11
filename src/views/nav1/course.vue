@@ -398,7 +398,7 @@
 						type    : 'success',
 						message : 'Success'
 					});
-					this.getProduct();
+					this.getCourse();
 				})
 				.catch(err => {
 					console.log('err', err)

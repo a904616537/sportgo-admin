@@ -28,7 +28,8 @@ if(process.env.NODE_ENV === 'production') {
     Vue.config.apiUrl    = 'http://server.sportgochina.com';
     Vue.config.uploadUrl = "http://img.sportgochina.com/upload";
 } else {
-    Vue.config.apiUrl    = 'http://server.sportgochina.com';
+    // Vue.config.apiUrl    = 'http://server.sportgochina.com';
+    Vue.config.apiUrl    = 'http://localhost:8081';
     Vue.config.uploadUrl = "http://img.sportgochina.com/upload";
 }
 
